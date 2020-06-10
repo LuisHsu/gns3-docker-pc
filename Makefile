@@ -1,6 +1,6 @@
 build:
-	docker build -t vrend/491g-docker .
+	docker build -t newinternetlab/491g-docker .
 push:
-	docker push vrend/491g-docker
+	docker push netinternetlab/491g-docker
 run:
-	docker run -it vrend/491g-docker bash
+	docker run --privileged -it newinternetlab/491g-docker bash

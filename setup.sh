@@ -264,6 +264,32 @@ EOT
 
 apt-get install -y net-tools
 
+# Configure Quagga
+mkdir -p /var/log/quagga && chown quagga:quagga /var/log/quagga
+touch /etc/quagga/zebra.conf
+cat <<EOT > /etc/quagga/zebra.conf
+hostname localhost
+password zebra
+enable password zebra
+log file /var/log/quagga/zebra.log
+!
+interface eth0
+!
+interface ath0
+!
+interface lo
+!
+access-list vtylist permit 127.0.0.1/32
+access-list vtylist deny any
+!
+ip forwarding
+!
+line vty
+ access-class vtylist
+!
+EOT
+chown quagga:quagga /etc/quagga/zebra.conf && chmod 640 /etc/quagga/zebra.conf
+
 #----------------------------------------
 # Create labuser
 # Install sudo
