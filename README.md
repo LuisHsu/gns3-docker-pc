@@ -4,7 +4,7 @@ In GNS3:
 
 New Template -> Manually create -> Docker -> Docker containers -> New -> New image.
 
-Set the Image name as "jwoglom/491g-docker:latest" and add two (if needed) network adapters. Then drag the new template onto the screen.
+Set the Image name as "newinternetlab/491g-docker:latest" and add two (if needed) network adapters. Then drag the new template onto the screen.
 
 
 
