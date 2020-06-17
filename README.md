@@ -21,6 +21,6 @@ Once logged in with username and password gns3, hit enter and then choose the op
 
 Delete the Docker nodes in the GNS3 graphical diagram.
 
-Run `docker rmi -f vrend/491g-docker`
+Run `docker rmi -f newinternetlab/491g-docker`
 
 Re-add the Docker nodes and you will see in the GNS3 console at the bottom of the window that the image is being re-pulled from Docker Hub.
