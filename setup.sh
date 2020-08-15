@@ -263,9 +263,11 @@ EOT
 # Install net-tools
 
 apt-get install -y net-tools
-
+#---------------------------------------
 # Configure Quagga
+#---------------------------------------
 mkdir -p /var/log/quagga && chown quagga:quagga /var/log/quagga
+#---zebra.conf-----------------------------------------------------------------
 touch /etc/quagga/zebra.conf
 cat <<EOT > /etc/quagga/zebra.conf
 hostname localhost
@@ -289,6 +291,85 @@ line vty
 !
 EOT
 chown quagga:quagga /etc/quagga/zebra.conf && chmod 640 /etc/quagga/zebra.conf
+#---ripd.conf-----------------------------------------------------------------
+touch /etc/quagga/ripd.conf
+cat <<EOT > /etc/quagga/ripd.conf
+! -*- rip -*-
+!
+! RIPd sample configuration file
+!
+hostname ripd
+password zebra
+!
+! debug rip events
+! debug rip packet
+!
+router rip
+! network 11.0.0.0/8
+! network eth0
+! route 10.0.0.0/8
+! distribute-list private-only in eth0
+!
+!access-list private-only permit 10.0.0.0/8
+!access-list private-only deny any
+!
+!log file ripd.log
+!
+log stdout
+EOT
+chown quagga:quagga /etc/quagga/ripd.conf && chmod 640 /etc/quagga/ripd.conf
+#---ospfd.conf----------------------------------------------------------------
+touch /etc/quagga/ospfd.conf
+cat <<EOT > /etc/quagga/ospfd.conf
+! -*- ospf -*-
+!
+! OSPFd sample configuration file
+!
+!
+hostname ospfd
+password zebra
+!enable password please-set-at-here
+!
+!router ospf
+! network 192.168.1.0/24 area 0
+!
+log stdout
+EOT
+chown quagga:quagga /etc/quagga/ospfd.conf && chmod 640 /etc/quagga/ospfd.conf
+#---bgpd.conf----------------------------------------------------------------
+touch /etc/quagga/bgpd.conf
+cat <<EOT > /etc/quagga/bgpd.conf
+! -*- bgp -*-
+!
+! BGPd sample configuratin file
+!
+! $Id: bgpd.conf.sample,v 1.1 2002/12/13 20:15:29 paul Exp $
+!
+hostname bgpd
+password zebra
+!enable password please-set-at-here
+!
+!bgp mulitple-instance
+!
+!router bgp 7675
+! bgp router-id 10.0.0.1
+! network 10.0.0.0/8
+! neighbor 10.0.0.2 remote-as 7675
+! neighbor 10.0.0.2 route-map set-nexthop out
+! neighbor 10.0.0.2 ebgp-multihop
+! neighbor 10.0.0.2 next-hop-self
+!
+! access-list all permit any
+!
+!route-map set-nexthop permit 10
+! match ip address all
+! set ip next-hop 10.0.0.1
+!
+!log file bgpd.log
+!
+log stdout
+EOT
+chown quagga:quagga /etc/quagga/bgpd.conf && chmod 640 /etc/quagga/bgpd.conf
 
 #----------------------------------------
 # Create labuser
