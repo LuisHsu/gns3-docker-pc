@@ -238,9 +238,11 @@ apt-get -y install unzip zip
 # openvswitch
 apt-get install -y openvswitch-switch
 
-
 # ethtool
 apt-get -y install ethtool
+
+# scapy 
+apt-get -y install scapy 
 
 # Reinstall tftpd-hpa because it doesn't work the first time...
 
