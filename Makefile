@@ -1,6 +1,6 @@
 build:
-	docker build -t newinternetlab/491g-docker .
+	docker build -t newinternetlab/docker-pc .
 push:
-	docker push newinternetlab/491g-docker
+	docker push newinternetlab/docker-pc
 run:
-	docker run --privileged -it newinternetlab/491g-docker bash
+	docker run --privileged -it newinternetlab/docker-pc bash
