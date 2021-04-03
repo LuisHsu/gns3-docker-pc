@@ -241,26 +241,21 @@ apt-get install -y openvswitch-switch
 # ethtool
 apt-get -y install ethtool
 
-# scapy 
+# scapy ( Dec 2020)
 apt-get -y install scapy 
+
+# SCTP (Jan 2021)
+apt-get install libsctp-dev lksctp-tools
+
 
 # Reinstall tftpd-hpa because it doesn't work the first time...
 
 apt-get install -y tftpd-hpa
-
 mkdir /tftpboot
 chmod -R 777 /tftpboot
 chown -R tftp /tftpboot
 
-rm /etc/default/tftpd-hpa
-touch /etc/default/tftd-hpa
-cat <<EOT > /etc/default/tftpd-hpa
-USE_DAEMON="yes"
-TFTP_USERNAME="tftp"
-TFTP_DIRECTORY="/tftpboot"
-TFTP_ADDRESS=":69"
-TFTP_OPTIONS="--secure --create"
-EOT
+# tfpt-hpa file is now added (moved to Dockerfile)
 
 # Install net-tools
 
@@ -270,107 +265,12 @@ apt-get install -y net-tools
 #---------------------------------------
 mkdir -p /var/log/quagga && chown quagga:quagga /var/log/quagga
 #---zebra.conf-----------------------------------------------------------------
-touch /etc/quagga/zebra.conf
-cat <<EOT > /etc/quagga/zebra.conf
-hostname localhost
-password zebra
-enable password zebra
-log file /var/log/quagga/zebra.log
-!
-interface eth0
-!
-interface ath0
-!
-interface lo
-!
-access-list vtylist permit 127.0.0.1/32
-access-list vtylist deny any
-!
-ip forwarding
-!
-line vty
- access-class vtylist
-!
-EOT
 chown quagga:quagga /etc/quagga/zebra.conf && chmod 640 /etc/quagga/zebra.conf
 #---ripd.conf-----------------------------------------------------------------
-touch /etc/quagga/ripd.conf
-cat <<EOT > /etc/quagga/ripd.conf
-! -*- rip -*-
-!
-! RIPd sample configuration file
-!
-hostname ripd
-password zebra
-!
-! debug rip events
-! debug rip packet
-!
-router rip
-! network 11.0.0.0/8
-! network eth0
-! route 10.0.0.0/8
-! distribute-list private-only in eth0
-!
-!access-list private-only permit 10.0.0.0/8
-!access-list private-only deny any
-!
-!log file ripd.log
-!
-log stdout
-EOT
 chown quagga:quagga /etc/quagga/ripd.conf && chmod 640 /etc/quagga/ripd.conf
 #---ospfd.conf----------------------------------------------------------------
-touch /etc/quagga/ospfd.conf
-cat <<EOT > /etc/quagga/ospfd.conf
-! -*- ospf -*-
-!
-! OSPFd sample configuration file
-!
-!
-hostname ospfd
-password zebra
-!enable password please-set-at-here
-!
-!router ospf
-! network 192.168.1.0/24 area 0
-!
-log stdout
-EOT
 chown quagga:quagga /etc/quagga/ospfd.conf && chmod 640 /etc/quagga/ospfd.conf
 #---bgpd.conf----------------------------------------------------------------
-touch /etc/quagga/bgpd.conf
-cat <<EOT > /etc/quagga/bgpd.conf
-! -*- bgp -*-
-!
-! BGPd sample configuratin file
-!
-! $Id: bgpd.conf.sample,v 1.1 2002/12/13 20:15:29 paul Exp $
-!
-hostname bgpd
-password zebra
-!enable password please-set-at-here
-!
-!bgp mulitple-instance
-!
-!router bgp 7675
-! bgp router-id 10.0.0.1
-! network 10.0.0.0/8
-! neighbor 10.0.0.2 remote-as 7675
-! neighbor 10.0.0.2 route-map set-nexthop out
-! neighbor 10.0.0.2 ebgp-multihop
-! neighbor 10.0.0.2 next-hop-self
-!
-! access-list all permit any
-!
-!route-map set-nexthop permit 10
-! match ip address all
-! set ip next-hop 10.0.0.1
-!
-!log file bgpd.log
-!
-log stdout
-EOT
 chown quagga:quagga /etc/quagga/bgpd.conf && chmod 640 /etc/quagga/bgpd.conf
 
 #----------------------------------------
@@ -390,18 +290,7 @@ usermod -aG sudo labuser
 # Bypass weird sudo pseudo-error
 echo "Set disable_coredump false" >> /etc/sudo.conf
 
-# Create telnet config file
-cat <<EOT >> /etc/xinetd.d/telnet
-service telnet
-{
-disable = no
-flags = REUSE
-socket_type = stream
-wait = no
-server = /usr/sbin/in.telnetd
-log_on_failure += USERID
-}
-EOT
+# Create telnet config file (moved to Dockerfile)
 
 echo "labuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 echo "Done!"
