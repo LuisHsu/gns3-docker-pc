@@ -1,0 +1,9 @@
+service telnet
+{
+disable = no
+flags = REUSE
+socket_type = stream
+wait = no
+server = /usr/sbin/in.telnetd
+log_on_failure += USERID
+}

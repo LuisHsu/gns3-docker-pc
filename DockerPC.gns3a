@@ -2,7 +2,7 @@
     "name": "PC",
     "category": "guest",
     "description": "docker-pc is a Ubuntu based networking toolbox.\nIt contains the following utilities: net-tools, iproute2, ping, traceroute, curl, host, iperf3, mtr, socat, ssh client, tcpdump and the multicast testing tools msend/mreceive.",
-    "vendor_name": "Internet Lab",
+    "vendor_name": "Internet Lab, rebuild by Luis Hsu",
     "vendor_url": "https://www.debian.org",
     "product_name": "Docker_PC",
     "registry_version": 3,
@@ -13,6 +13,6 @@
     "symbol": "docker_guest.svg",
     "docker": {
         "adapters": 2,
-        "image": "newinternetlab/docker-pc:latest"
+        "image": "luishsu/gns3-docker-pc:m1-chip"
     }
 }
